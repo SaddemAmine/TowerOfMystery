@@ -4,6 +4,10 @@
 #include <SDL/SDL_image.h>
 #include <SDL/SDL_mixer.h>
 
+    SDL_Surface *screen = NULL; int x = 0,y = 0; SDL_Event event; int test;
+    SDL_Surface *BG = NULL; SDL_Rect pos,posb,posb2; SDL_Surface *BG1 = NULL; SDL_Surface *BG2 = NULL;
+    SDL_Surface *BGH = NULL; Mix_Music *SFX;
+    
 void main(){
     SDL_Surface *screen = NULL; int x = 0,y = 0; SDL_Event event; int test;
     SDL_Surface *BG = NULL; SDL_Rect pos,posb,posb2; SDL_Surface *BG1 = NULL; SDL_Surface *BG2 = NULL;
