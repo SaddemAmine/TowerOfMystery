@@ -6,8 +6,7 @@
 #include "fn.h"
 
     SDL_Surface *screen = NULL; 
-    SDL_Surface *BG = NULL; SDL_Surface *BG1 = NULL; SDL_Surface *BG2 = NULL;
-    SDL_Surface *BGH = NULL; Mix_Music *SFX;
+    Menu M; Mix_Music *sfx; Mix_Music *mm; SDL_Surface* scr;
 
 void main(){
 
