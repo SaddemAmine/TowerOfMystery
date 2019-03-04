@@ -12,7 +12,8 @@ void init_res(){
     M.MBG = IMG_Load("menu_res/menu2.png"); M.B1 = IMG_Load("menu_res/1H.png"); 
     M.B2 = IMG_Load("menu_res/2H.png"); M.B1C = IMG_Load("menu_res/1C.png");
     M.B3 = IMG_Load("menu_res/3H.png"); M.B2C = IMG_Load("menu_res/2C.png");
-    M.B3C = IMG_Load("menu_res/3C.png");
+    M.B3C = IMG_Load("menu_res/3C.png"); M.SBG = IMG_Load("menu_res/settings/menu_s.png");
+    M.S1H = IMG_Load("menu_res/settings/volume_h.png"); M.S2 = IMG_Load("menu_res/settings/S_2.png");
 }
 
 void free_res(){

@@ -9,6 +9,11 @@ typedef struct{
     SDL_Surface* B1C;
     SDL_Surface* B2C;
     SDL_Surface* B3C;
+    SDL_Surface* SBG;
+    SDL_Surface* S1H;
+    SDL_Surface* S2;
+    SDL_Surface* S3;
+    SDL_Surface* S4;
 }Menu;
 
 void init_res();
