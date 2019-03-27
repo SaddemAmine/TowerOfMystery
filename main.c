@@ -4,20 +4,21 @@
 #include <SDL/SDL_image.h>
 #include <SDL/SDL_mixer.h>
 #include "fn.h"
-
-    SDL_Surface *screen = NULL; 
-    Menu M; Mix_Music *sfx; Mix_Music *mm; SDL_Surface* scr;
+ 
 
 void main(){
+    Menu M; Music m; CC cc; SDL_Surface* scr = NULL; int T[20] = {0};
 
     if(SDL_Init(SDL_INIT_VIDEO)!=0){
         printf("Error: %s\n",SDL_GetError());
         return;
     }
-    if(Mix_OpenAudio(44100,MIX_DEFAULT_FORMAT,MIX_DEFAULT_CHANNELS,1024)==-1){
+    if(Mix_OpenAudio(44100,MIX_DEFAULT_FORMAT,1,1024)==-1){
         printf("Error : %s",Mix_GetError());
         return;
     }
-    init_res();
-    menu();
+    init_res(&M,&m,&cc);
+    savefile_to_array(T);
+    menu(M,m,&scr,T,cc);
+    array_to_savefile(T);
 }
