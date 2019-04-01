@@ -25,9 +25,9 @@ SDL_Rect penemie;
       printf("Error 2: %s\n",SDL_GetError());
 
   }
-  image = IMG_Load("detective.png");
-  enemie=IMG_Load("enemie.jpg");
-  bg = SDL_LoadBMP("background.bmp");
+  image = IMG_Load(".png");
+  enemie=IMG_Load(".jpg");
+  bg = SDL_LoadBMP(".bmp");
   if(!image)
   {
      printf("Error: %s\n",SDL_GetError());
