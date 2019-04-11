@@ -34,6 +34,17 @@ typedef struct{
 }Music;
 
 typedef struct{
+	SDL_Surface* imgI[2];
+	SDL_Surface* imgD[2];
+	SDL_Surface* imgG[2];
+	SDL_Surface* imgS[3];
+}animation;
+
+typedef struct{
+	animation anim;
+}personnage;
+
+typedef struct{
     SDL_Surface* MBG; //menu background
     SDL_Surface* B1; //button 1
     SDL_Surface* B2; //button 2
@@ -46,6 +57,7 @@ typedef struct{
     SDL_Surface* S2;
     SDL_Surface* S3;
     SDL_Surface* S4;
+    SDL_Surface* highlight;
 }Menu;
 
 void init_res(Menu* M,Music* m,CC* x);
@@ -58,5 +70,10 @@ void savefile_to_array(int T[]);
 void array_to_savefile(int T[]);
 int cc_menu(CC cc,Music m,SDL_Surface** scr,int T[]);
 void savecc(int x,int y,int z);
+void init_anim(personnage* p);
+void intro(SDL_Surface** scr);
+void game(SDL_Surface** scr);
+void credits(SDL_Surface** scr);
+
 
 #endif

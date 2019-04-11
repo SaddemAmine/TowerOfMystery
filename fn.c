@@ -8,10 +8,10 @@
 void init_res(Menu* M,Music* m,CC* x){
     //main menu resources
     m->sfx = Mix_LoadMUS("menu_res/CSFX.mp3"); m->mm = Mix_LoadMUS("menu_res/music.mp3");
-    M->MBG = IMG_Load("menu_res/menu/menu2.png"); M->B1 = IMG_Load("menu_res/menu/1H.png"); 
-    M->B2 = IMG_Load("menu_res/menu/2H.png"); M->B1C = IMG_Load("menu_res/menu/1C.png");
+    M->MBG = IMG_Load("menu_res/menu/menu.png"); /*menu2*/ M->B1 = IMG_Load("menu_res/menu/1H.png"); 
+    M->B2 = IMG_Load("menu_res/menu/arrow.png"); M->B1C = IMG_Load("menu_res/menu/1C.png");
     M->B3 = IMG_Load("menu_res/menu/3H.png"); M->B2C = IMG_Load("menu_res/menu/2C.png");
-    M->B3C = IMG_Load("menu_res/menu/3C.png");
+    M->B3C = IMG_Load("menu_res/menu/3C.png"); M->highlight = IMG_Load("menu_res/menu/arrow.png");
     //settings menu resources
     M->SBG = IMG_Load("menu_res/settings/menu_s.png");
     M->S1H = IMG_Load("menu_res/settings/volume_h.png"); M->S2 = IMG_Load("menu_res/settings/S_2.png");
@@ -391,12 +391,15 @@ int cc_menu(CC cc,Music m,SDL_Surface** scr,int T[]){
     }
 }
 
+void game(SDL_Surface** scr);
+
 void menu(Menu M,Music m,SDL_Surface** scr,int T[],CC cc){
-    int x = 0,y = 0; SDL_Event event; int test,test2=0; SDL_Rect pos,posb,posb2,posb3; int i = 0;
+    int x = 0,y = 0; SDL_Event event; int test,test2=0; SDL_Rect pos,posb,posb2,posb3,posb4; int i = 0;
     pos.x = 0; pos.y = 0; pos.w = M.MBG->w; pos.h = M.MBG->h;
-    posb.x = 911; posb.y = 188; posb.w = M.B1->w; posb.h = M.B1->h;
-    posb2.x = 912; posb2.y = 302; posb2.w = M.B2->w; posb2.h = M.B2->h;
-    posb3.x = 913; posb3.y = 415;
+    posb.x = 1163; posb.y = 330; posb.w = M.B1->w; posb.h = M.B1->h;
+    posb2.x = 1210; posb2.y = 433; posb2.w = M.B2->w; posb2.h = M.B2->h;
+    posb3.x = 1194; posb3.y = 528;
+    posb4.x = 1168; posb4.y = 627;
     (*scr) = SDL_SetVideoMode(1280,720,32,SDL_HWSURFACE|SDL_DOUBLEBUF); 
     Mix_PlayMusic(m.mm,-1);
     switch(T[4]){
@@ -417,23 +420,29 @@ void menu(Menu M,Music m,SDL_Surface** scr,int T[],CC cc){
                 case SDL_MOUSEMOTION:
                     SDL_GetMouseState(&x,&y); test2 = 0;
                     printf("%d,%d ::%d\n",x,y,i); i++;
-                    if((x>909&&x<1011)&&(y>179&&y<281)){
-                        SDL_BlitSurface(M.B1,NULL,(*scr),&posb); printf("Yes//1\n"); test = 1; test2 = 1;
+                    if((x>1036&&x<1151)&&(y>326&&y<358)){
+                        SDL_BlitSurface(M.B2,NULL,(*scr),&posb); printf("Yes//1\n"); test = 1; test2 = 1;
                         //SDL_Flip((*scr));
                     }
                     else{
-                        if((x>909&&x<1011)&&(y>303&&y<400)){
+                        if((x>994&&x<1196)&&(y>429&&y<461)){
                         SDL_BlitSurface(M.B2,NULL,(*scr),&posb2); printf("Yes//2\n"); test = 2; test2 = 2;
                         //SDL_Flip((*scr));
                         }
                         else{
-                            if((x>909&&x<1011)&&(y>414&&y<514)){
-                                SDL_BlitSurface(M.B3,NULL,(*scr),&posb3); printf("Yes//3\n"); test = 3; test2 = 3;
+                            if((x>1050&&x<1152)&&(y>629&&y<665)){
+                                SDL_BlitSurface(M.B2,NULL,(*scr),&posb4); printf("Yes//3\n"); test = 3; test2 = 3;
                                 //SDL_Flip((*scr));
                             }
                             else{
-                                SDL_BlitSurface(M.MBG,NULL,(*scr),&pos); printf("No\n"); test = 0;
-                                //SDL_Flip((*scr));
+                                if((x>1008&&x<1183)&&(y>527&&y<557)){
+                                    SDL_BlitSurface(M.B2,NULL,(*scr),&posb3); printf("Yes//3\n"); test = 4; test2 = 4;
+                                    //SDL_Flip((*scr));
+                                }
+                                else{
+                                    SDL_BlitSurface(M.MBG,NULL,(*scr),&pos); printf("No\n"); test = 0;
+                                    //SDL_Flip((*scr));
+                                }
                             }
                         }
                     }
@@ -441,21 +450,31 @@ void menu(Menu M,Music m,SDL_Surface** scr,int T[],CC cc){
                 break;
                 case SDL_MOUSEBUTTONDOWN:
                     if(test == 1 && event.button.button == SDL_BUTTON_LEFT){
-                        SDL_BlitSurface(M.B1C,NULL,(*scr),&posb); Mix_PlayMusic(m.sfx,1);
+                        //SDL_BlitSurface(M.B1C,NULL,(*scr),&posb); 
+                        Mix_PlayMusic(m.sfx,1);
+                        game(scr);
                     }
                     else{
                         if(test == 2 && event.button.button == SDL_BUTTON_LEFT){
-                            SDL_BlitSurface(M.B2C,NULL,(*scr),&posb2); Mix_PlayMusic(m.sfx,1);
-                            if(!settings(M,m,scr,T))
-                                return;
+                            //SDL_BlitSurface(M.B2C,NULL,(*scr),&posb2); 
+                            Mix_PlayMusic(m.sfx,1);
+                                if(!settings(M,m,scr,T))
+                                    return;
+                            
                         }
                         else{
                             if(test == 3 && event.button.button == SDL_BUTTON_LEFT){
-                            SDL_BlitSurface(M.B3C,NULL,(*scr),&posb3); Mix_PlayMusic(m.sfx,1);
-                            free_res(M,m);
-                            return;    
+                                //SDL_BlitSurface(M.B3C,NULL,(*scr),&posb3); 
+                                Mix_PlayMusic(m.sfx,1);
+                                free_res(M,m);
+                                return;    
                             }
                             else{
+                                if(test == 4 && event.button.button == SDL_BUTTON_LEFT){
+                                    //SDL_BlitSurface(M.B3C,NULL,(*scr),&posb3); 
+                                    Mix_PlayMusic(m.sfx,1);
+                                    credits(scr);    
+                                }
                                 SDL_BlitSurface(M.MBG,NULL,(*scr),&pos);
                             }
                         }
@@ -466,45 +485,51 @@ void menu(Menu M,Music m,SDL_Surface** scr,int T[],CC cc){
                     SDL_BlitSurface(M.MBG,NULL,(*scr),&pos); SDL_Flip((*scr));
                     printf("---%d\n",test2);
                     if(event.key.keysym.sym == SDLK_DOWN){
-                        if(test2<3)
+                        if(test2<4)
                             test2++;
                         else
                             test2 = 1;
                         switch(test2){
-                            case 1: SDL_BlitSurface(M.B1,NULL,(*scr),&posb); printf("Yes//1 ::%d\n",test2); 
+                            case 1: SDL_BlitSurface(M.B2,NULL,(*scr),&posb); printf("Yes//1 ::%d\n",test2); 
                             test = 1; SDL_Flip((*scr)); break;
                             case 2: SDL_BlitSurface(M.B2,NULL,(*scr),&posb2); printf("Yes//2 ::%d\n",test2); 
                             test = 2; SDL_Flip((*scr)); break;
-                            case 3: SDL_BlitSurface(M.B3,NULL,(*scr),&posb3); printf("Yes//3 ::%d\n",test2); 
+                            case 3: SDL_BlitSurface(M.B2,NULL,(*scr),&posb3); printf("Yes//3 ::%d\n",test2); 
                             test = 3; SDL_Flip((*scr)); break;
+                            case 4: SDL_BlitSurface(M.B2,NULL,(*scr),&posb4); printf("Yes//4 ::%d\n",test2); 
+                            test = 4; SDL_Flip((*scr)); break;
                         }
                     }
                     if(event.key.keysym.sym == SDLK_UP){
                         if(test2>1)
                             test2--;
                         else
-                            test2 = 3;
+                            test2 = 4;
                         switch(test2){
-                            case 1: SDL_BlitSurface(M.B1,NULL,(*scr),&posb); printf("Yes//1 ::%d\n",test2); 
+                            case 1: SDL_BlitSurface(M.B2,NULL,(*scr),&posb); printf("Yes//1 ::%d\n",test2); 
                             test = 1; SDL_Flip((*scr)); break;
                             case 2: SDL_BlitSurface(M.B2,NULL,(*scr),&posb2); printf("Yes//2 ::%d\n",test2); 
                             test = 2; SDL_Flip((*scr)); break;
-                            case 3: SDL_BlitSurface(M.B3,NULL,(*scr),&posb3); printf("Yes//3 ::%d\n",test2); 
+                            case 3: SDL_BlitSurface(M.B2,NULL,(*scr),&posb3); printf("Yes//3 ::%d\n",test2); 
                             test = 3; SDL_Flip((*scr)); break;
+                            case 4: SDL_BlitSurface(M.B2,NULL,(*scr),&posb4); printf("Yes//4 ::%d\n",test2); 
+                            test = 4; SDL_Flip((*scr)); break;
                         }
                     }
                     if(event.key.keysym.sym == SDLK_SPACE){
                         switch(test2){
                             case 1: SDL_BlitSurface(M.B1C,NULL,(*scr),&posb); Mix_PlayMusic(m.sfx,1); 
-                                    if(!cc_menu(cc,m,scr,T))
-                                        return;
+                                    //if(!cc_menu(cc,m,scr,T))
+                                    //    return;
+                                    game(scr);
                             break;
                             
                             case 2: SDL_BlitSurface(M.B2C,NULL,(*scr),&posb2); //Mix_PlayMusic(m.sfx,1); 
                                     if(!settings(M,m,scr,T))
                                         return;
                             break;
-                            case 3: 
+                            case 3: credits(scr); break;
+                            case 4: 
                             SDL_BlitSurface(M.B3C,NULL,(*scr),&posb3); 
                             Mix_PlayMusic(m.sfx,1);
                             free_res(M,m);
@@ -515,6 +540,114 @@ void menu(Menu M,Music m,SDL_Surface** scr,int T[],CC cc){
                     SDL_Flip((*scr));
                 break;
             } 
+        }
+    }
+}
+
+
+void init_anim(personnage* p){
+    p->anim.imgI[0] = IMG_Load("media/player/p1.png");
+    p->anim.imgI[1] = IMG_Load("media/player/p2.png");
+    p->anim.imgD[0] = IMG_Load("media/player/p3_D.png");
+    p->anim.imgD[1] = IMG_Load("media/player/p4_D.png");
+    p->anim.imgG[0] = IMG_Load("media/player/p3_G.png");
+    p->anim.imgG[1] = IMG_Load("media/player/p4_G.png");
+    p->anim.imgS[0] = IMG_Load("media/player/p5.png");
+    p->anim.imgS[1] = IMG_Load("media/player/p6.png");
+    p->anim.imgS[2] = IMG_Load("media/player/p7.png");
+}
+
+
+void intro(SDL_Surface** scr){
+    (*scr) = SDL_SetVideoMode(1280,720,32,SDL_HWSURFACE|SDL_DOUBLEBUF);
+    SDL_Surface *f1,*f2,*f3,*f4;
+    f1 = IMG_Load("media/intro/1.png");
+    f2 = IMG_Load("media/intro/2.png");
+    f3 = IMG_Load("media/intro/3.png");
+    f4 = IMG_Load("media/intro/4.png");
+
+    SDL_BlitSurface(f1,NULL,(*scr),NULL);
+    SDL_Delay(500);
+    SDL_Flip((*scr));
+    SDL_BlitSurface(f2,NULL,(*scr),NULL);
+    SDL_Delay(500);
+    SDL_Flip((*scr));
+    SDL_BlitSurface(f3,NULL,(*scr),NULL);
+    SDL_Delay(500);
+    SDL_Flip((*scr));
+    SDL_BlitSurface(f4,NULL,(*scr),NULL);
+    SDL_Delay(500);
+    SDL_Flip((*scr));
+    SDL_Delay(500);
+}
+
+void credits(SDL_Surface** scr){
+    (*scr) = SDL_SetVideoMode(1280,720,32,SDL_HWSURFACE|SDL_DOUBLEBUF);
+    SDL_Surface* crd = IMG_Load("menu_res/menu/credits.png"); SDL_Event event; //SDL_Rect pos; pos.y = 100; pos.x = 0;
+    SDL_BlitSurface(crd,NULL,(*scr),NULL);
+    SDL_Flip((*scr));
+    while(1){
+        while(SDL_PollEvent(&event)){
+            switch(event.type){
+                case SDL_QUIT:
+                    free(crd);
+                    return;
+                break;   
+           }
+        }
+    }
+}
+
+
+void game(SDL_Surface** scr){
+    SDL_Rect posCam,pos,posJ; int i=0; Uint32 tempsPrecedent = 0, tempsActuel = 0; 
+    int z = 3725; int x = 0,y = 0,test = -1;
+    SDL_Event event; personnage p;
+    SDL_Surface* imglvl = IMG_Load("media/levels/level1.png");
+    posCam.x = 0; posCam.y = 0; pos.x = 0; pos.y = 3725; pos.h = 720; pos.w = 1280;
+    posJ.x = 640; posJ.y = 400; 
+    
+
+    
+    SDL_EnableKeyRepeat(10,10);
+    init_anim(&p);
+    (*scr) = SDL_SetVideoMode(1280,720,32,SDL_HWSURFACE|SDL_DOUBLEBUF);
+    
+    
+    while(1){
+        SDL_GetMouseState(&x,&y);
+        printf("%d,%d ::%d\n",x,y,i); i++;
+        tempsActuel = SDL_GetTicks();
+        if (tempsActuel - tempsPrecedent > 2){
+            printf("%d  %d---------------\n",z,posCam.y);
+            if(z>1800)
+                z-=2;
+            else{
+                z = 3725; 
+            }
+            pos.y = z;
+            tempsPrecedent = tempsActuel;
+        }
+
+        SDL_BlitSurface(imglvl,&pos,(*scr),NULL); 
+        SDL_BlitSurface(p.anim.imgI[0],NULL,(*scr),&posJ);
+        SDL_Flip((*scr));
+        while(SDL_PollEvent(&event)){
+            switch(event.type){
+                case SDL_QUIT:
+                    return;
+                break;
+                case SDL_KEYDOWN:
+                    if(event.key.keysym.sym == SDLK_RIGHT)
+                        posJ.x += 5;
+                    if(event.key.keysym.sym == SDLK_LEFT)
+                        posJ.x -= 5;
+                    if(event.key.keysym.sym == SDLK_SPACE)
+                        posJ.y -= 30;
+                    if(event.key.keysym.sym == SDLK_DOWN)
+                        posJ.y += 30;
+                break;
+            }
         }
     }
 }

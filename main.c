@@ -7,7 +7,7 @@
  
 
 void main(){
-    Menu M; Music m; CC cc; SDL_Surface* scr = NULL; int T[20] = {0};
+    Menu M; Music m; CC cc; SDL_Surface* scr = NULL; int T[20] = {0}; personnage p;
 
     if(SDL_Init(SDL_INIT_VIDEO)!=0){
         printf("Error: %s\n",SDL_GetError());
@@ -17,6 +17,7 @@ void main(){
         printf("Error : %s",Mix_GetError());
         return;
     }
+    intro(&scr);
     init_res(&M,&m,&cc);
     savefile_to_array(T);
     menu(M,m,&scr,T,cc);

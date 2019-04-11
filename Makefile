@@ -9,5 +9,8 @@ main.o: main.c
 fn.o: fn.c
 	gcc -c fn.c -lSDL -lSDL_image -lSDL_ttf -lSDL_mixer -g
 
+test: test.c
+	gcc test.c -o test -lSDL -lSDL_image -lSDL_ttf -lSDL_mixer -g
+
 clean:
 	rm *.o prog -f
