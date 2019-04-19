@@ -600,15 +600,17 @@ void credits(SDL_Surface** scr){
 
 
 void game(SDL_Surface** scr){
-    SDL_Rect posCam,pos,posJ; int i=0; Uint32 tempsPrecedent = 0, tempsActuel = 0; 
+    SDL_Rect posCam,pos,posJ; int i=0,rc=0,lc=0,jc=0,ic=0; Uint32 tempsPrecedent = 0, tempsActuel = 0; int frames = 0,jframes = 0;
     int z = 3725; int x = 0,y = 0,test = -1;
     SDL_Event event; personnage p;
     SDL_Surface* imglvl = IMG_Load("media/levels/level1.png");
     posCam.x = 0; posCam.y = 0; pos.x = 0; pos.y = 3725; pos.h = 720; pos.w = 1280;
     posJ.x = 640; posJ.y = 400; 
+    Uint32 tempsPrecedentS = 0, tempsActuelS = 0;
+    Uint32 tempsPrecedentA = 0, tempsActuelA = 0;
+    Uint32 tempsPrecedentAr = 0, tempsActuelAr = 0;
     
 
-    
     SDL_EnableKeyRepeat(10,10);
     init_anim(&p);
     (*scr) = SDL_SetVideoMode(1280,720,32,SDL_HWSURFACE|SDL_DOUBLEBUF);
@@ -616,38 +618,108 @@ void game(SDL_Surface** scr){
     
     while(1){
         SDL_GetMouseState(&x,&y);
-        printf("%d,%d ::%d\n",x,y,i); i++;
-        tempsActuel = SDL_GetTicks();
-        if (tempsActuel - tempsPrecedent > 2){
-            printf("%d  %d---------------\n",z,posCam.y);
+        //printf("%d,%d ::%d\n",x,y,i); i++;
+        tempsActuelS = SDL_GetTicks();
+        printf("%d  %d  %d----\n",frames,jframes,z);
+        if (tempsActuelS - tempsPrecedentS > 2){
+            printf("----%d----\n",z);
             if(z>1800)
                 z-=2;
             else{
                 z = 3725; 
             }
             pos.y = z;
-            tempsPrecedent = tempsActuel;
+            tempsPrecedentS = tempsActuelS;
         }
 
-        SDL_BlitSurface(imglvl,&pos,(*scr),NULL); 
-        SDL_BlitSurface(p.anim.imgI[0],NULL,(*scr),&posJ);
-        SDL_Flip((*scr));
+        SDL_BlitSurface(imglvl,&pos,(*scr),NULL);
+        //SDL_BlitSurface(p.anim.imgG[1],NULL,(*scr),NULL);
+        
+        tempsActuelA = SDL_GetTicks();
+        if(tempsActuelA - tempsPrecedentA > 100){
+            if(!jframes && !frames){
+                ic++;
+            }
+            tempsPrecedentA = tempsActuelA;
+        }
+
+        SDL_BlitSurface(p.anim.imgI[ic%2],NULL,(*scr),&posJ); 
+        
+
         while(SDL_PollEvent(&event)){
             switch(event.type){
                 case SDL_QUIT:
                     return;
                 break;
                 case SDL_KEYDOWN:
-                    if(event.key.keysym.sym == SDLK_RIGHT)
-                        posJ.x += 5;
-                    if(event.key.keysym.sym == SDLK_LEFT)
-                        posJ.x -= 5;
-                    if(event.key.keysym.sym == SDLK_SPACE)
-                        posJ.y -= 30;
-                    if(event.key.keysym.sym == SDLK_DOWN)
-                        posJ.y += 30;
+                   if(event.key.keysym.sym == SDLK_RIGHT){
+                        tempsActuel = SDL_GetTicks();
+                        if ((tempsActuel - tempsPrecedent > 50)&&(frames < 50)){
+                            frames ++;
+                            tempsPrecedent = tempsActuel;
+                        }
+                        tempsActuelAr = SDL_GetTicks();
+                        if(tempsActuelAr - tempsPrecedentAr > 10){
+                            rc++;
+                            tempsPrecedentAr = tempsActuelAr;
+                        }
+                        if(frames < 5){
+                            posJ.x += 4;
+                        }
+                        else{
+                            posJ.x += 20;
+                        }
+                        SDL_BlitSurface(p.anim.imgD[rc%2],NULL,(*scr),&posJ);
+                        printf("%d --_--_--\n",rc);
+                    }
+
+                    if(event.key.keysym.sym == SDLK_LEFT){
+                        tempsActuel = SDL_GetTicks();
+                        if ((tempsActuel - tempsPrecedent > 50)&&(frames < 50)){
+                            lc++;
+                            frames ++;
+                            tempsPrecedent = tempsActuel;
+                        }
+                        if(tempsActuelAr - tempsPrecedentAr > 10){
+                            lc++;
+                            tempsPrecedentAr = tempsActuelAr;
+                        }
+                        if(frames < 5){
+                            posJ.x -= 4;
+                        }
+                        else{
+                            posJ.x -= 20;
+                        }
+                        SDL_BlitSurface(p.anim.imgG[lc%2],NULL,(*scr),&posJ);
+                        printf("%d --_--_--\n",lc);
+                    }
+                    
+                    if(event.key.keysym.sym == SDLK_UP){
+                        jframes = 50;
+                    }
+                break;
+                case SDL_KEYUP:
+                    if(event.key.keysym.sym == SDLK_RIGHT){
+                        frames = 0; rc = 0;
+                    }
+                    if(event.key.keysym.sym == SDLK_LEFT){
+                        frames = 0; lc = 0;
+                    }
                 break;
             }
         }
+        tempsActuel = SDL_GetTicks();
+        if((jframes > 0) && (tempsActuel - tempsPrecedent > 20)){
+            tempsPrecedent = tempsActuel;
+            if(jframes > 27){
+                posJ.y -= 10;
+                jframes --;
+            }
+            else{
+                posJ.y += 10;
+                jframes --;
+            }
+        }
+        SDL_Flip((*scr));
     }
 }
