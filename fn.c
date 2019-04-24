@@ -598,12 +598,33 @@ void credits(SDL_Surface** scr){
     }
 }
 
+SDL_Color GetPixel(SDL_Surface* pSurface,int x,int y){
+  SDL_Color color;
+  Uint32 col = 0 ;
+
+  //determine position
+  char* pPosition = ( char* ) pSurface->pixels ;
+
+  //offset by y
+  pPosition += ( pSurface->pitch * y ) ;
+
+  //offset by x
+  pPosition += ( pSurface->format->BytesPerPixel * x ) ;
+
+  //copy pixel data
+  memcpy ( &col , pPosition , pSurface->format->BytesPerPixel ) ;
+
+  //convert color
+  SDL_GetRGB ( col , pSurface->format , &color.r , &color.g , &color.b ) ;
+  return ( color ) ;
+}
 
 void game(SDL_Surface** scr){
     SDL_Rect posCam,pos,posJ; int i=0,rc=0,lc=0,jc=0,ic=0; Uint32 tempsPrecedent = 0, tempsActuel = 0; int frames = 0,jframes = 0;
-    int z = 3725; int x = 0,y = 0,test = -1;
+    int z = 3725; int x = 0,y = 0,test = -1,Itest=1; SDL_Color cu,cd;
     SDL_Event event; personnage p;
     SDL_Surface* imglvl = IMG_Load("media/levels/level1.png");
+    SDL_Surface* imglvlm = IMG_Load("media/levels/level1m.png");
     posCam.x = 0; posCam.y = 0; pos.x = 0; pos.y = 3725; pos.h = 720; pos.w = 1280;
     posJ.x = 640; posJ.y = 400; 
     Uint32 tempsPrecedentS = 0, tempsActuelS = 0;
@@ -643,7 +664,8 @@ void game(SDL_Surface** scr){
             tempsPrecedentA = tempsActuelA;
         }
 
-        SDL_BlitSurface(p.anim.imgI[ic%2],NULL,(*scr),&posJ); 
+        if(Itest)
+            SDL_BlitSurface(p.anim.imgI[ic%2],NULL,(*scr),&posJ); 
         
 
         while(SDL_PollEvent(&event)){
@@ -653,6 +675,7 @@ void game(SDL_Surface** scr){
                 break;
                 case SDL_KEYDOWN:
                    if(event.key.keysym.sym == SDLK_RIGHT){
+                        Itest = 0;
                         tempsActuel = SDL_GetTicks();
                         if ((tempsActuel - tempsPrecedent > 50)&&(frames < 50)){
                             frames ++;
@@ -663,17 +686,20 @@ void game(SDL_Surface** scr){
                             rc++;
                             tempsPrecedentAr = tempsActuelAr;
                         }
+                        if(posJ.x<920){
                         if(frames < 5){
                             posJ.x += 4;
                         }
                         else{
                             posJ.x += 20;
                         }
+                        }
                         SDL_BlitSurface(p.anim.imgD[rc%2],NULL,(*scr),&posJ);
                         printf("%d --_--_--\n",rc);
                     }
 
                     if(event.key.keysym.sym == SDLK_LEFT){
+                        Itest = 0;
                         tempsActuel = SDL_GetTicks();
                         if ((tempsActuel - tempsPrecedent > 50)&&(frames < 50)){
                             lc++;
@@ -684,11 +710,13 @@ void game(SDL_Surface** scr){
                             lc++;
                             tempsPrecedentAr = tempsActuelAr;
                         }
-                        if(frames < 5){
-                            posJ.x -= 4;
-                        }
-                        else{
-                            posJ.x -= 20;
+                        if(posJ.x>214){
+                            if(frames < 5){
+                                posJ.x -= 4;
+                            }
+                            else{
+                                posJ.x -= 20;
+                            }
                         }
                         SDL_BlitSurface(p.anim.imgG[lc%2],NULL,(*scr),&posJ);
                         printf("%d --_--_--\n",lc);
@@ -700,26 +728,45 @@ void game(SDL_Surface** scr){
                 break;
                 case SDL_KEYUP:
                     if(event.key.keysym.sym == SDLK_RIGHT){
-                        frames = 0; rc = 0;
+                        frames = 0; rc = 0; Itest = 1;
                     }
                     if(event.key.keysym.sym == SDLK_LEFT){
-                        frames = 0; lc = 0;
+                        frames = 0; lc = 0; Itest = 1;
                     }
                 break;
             }
         }
         tempsActuel = SDL_GetTicks();
+        if(posJ.y < 228)
+            cu = GetPixel(imglvlm,posJ.x+70,288);
+        else
+            cu = GetPixel(imglvlm,posJ.x+70,posJ.y);
+        cd = GetPixel(imglvlm,posJ.x+70,posJ.y+228);
         if((jframes > 0) && (tempsActuel - tempsPrecedent > 20)){
             tempsPrecedent = tempsActuel;
             if(jframes > 27){
-                posJ.y -= 10;
+                printf("%d %d %d --6-6--\n",cu.r,cu.g,cu.b);
+                if(cu.r && cu.g && cu.b)
+                    posJ.y -= 10;
                 jframes --;
             }
             else{
-                posJ.y += 10;
+                printf("%d %d %d --6-6--\n",cu.r,cu.g,cu.b);
+                if(cd.r && cd.g && cd.b)
+                    posJ.y += 10;
                 jframes --;
             }
         }
+
+        if(posJ.y < 228)
+            cu = GetPixel(imglvlm,posJ.x+70,288);
+        else
+            cu = GetPixel(imglvlm,posJ.x+70,posJ.y);
+
+        cd = GetPixel(imglvlm,posJ.x+70,posJ.y+228);
+        if(cu.r && cu.g && cu.b && !jframes)
+            posJ.y += 10;
+
         SDL_Flip((*scr));
     }
 }
