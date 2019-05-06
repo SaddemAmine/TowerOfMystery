@@ -7,7 +7,7 @@
  
 
 void main(){
-    Menu M; Music m; CC cc; SDL_Surface* scr = NULL; int T[20] = {0}; personnage p;
+    Menu M; Music m; CC cc; SDL_Surface* scr = NULL; int T[20] = {0}; Player p;
 
     if(SDL_Init(SDL_INIT_VIDEO)!=0){
         printf("Error: %s\n",SDL_GetError());
