@@ -1,3 +1,19 @@
+/*! \mainpage Welcome!
+*
+* \section intro_sec Introduction
+*
+* This website is all about testing doxygen in hopes of efficiently documenting our game.  
+*
+* \section whatis_rec What is MyGame?
+* ToM is a work of art. Don't overthink it just embrace it. 
+*
+*/
+
+/*!
+*  @file main.c
+*  @brief This is a testing program to check if everything works.
+*/
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <SDL/SDL.h>

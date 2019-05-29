@@ -1,3 +1,9 @@
+
+/*!
+*  @file fn.h
+*  @brief This is where all the functions definitions are along with the structures.
+*/
+
 #ifndef FN_H_INCLUDED
 #define FN_H_INCLUDED 
 
@@ -19,6 +25,10 @@ typedef struct{
     SDL_Surface* f3;
 }struct_feet;
 
+/*
+* @struct CC
+* @brief This structure has the custom character elements.
+*/
 typedef struct{
     SDL_Surface* ccbg;
     SDL_Surface* hl;
@@ -28,11 +38,19 @@ typedef struct{
     struct_feet feet;
 }CC;
 
+/*
+* @struct Music
+* @brief This structures contains music and sound effects.
+*/
 typedef struct{
     Mix_Music* sfx;
     Mix_Music* mm;
 }Music;
 
+/*
+* @struct animation
+* @brief This structure has the pictures needed to animate the player.
+*/
 typedef struct{
 	SDL_Surface* imgI[2];
 	SDL_Surface* imgD[2];
@@ -41,6 +59,10 @@ typedef struct{
     SDL_Surface* imgSG[3];
 }animation;
 
+/*
+* @struct player
+* @brief This structure represents the player.
+*/
 typedef struct{
 	animation anim;
     int score;
@@ -52,23 +74,39 @@ typedef struct{
 
 }Player;
 
+/*
+* @struct puzzle
+* @brief Puzzle structure.
+*/
 typedef struct{
 	SDL_Surface* img;
 	int rep;
 }puzzle;
 
+/*
+* @struct bat
+* @brief One of the ennemies.
+*/
 typedef struct{
 SDL_Rect  position_bat;
 SDL_Surface* image_bat[2];
 int ac; //animation counter
 } bat;
 
+/*
+* @struct Coin
+* @brief Make sure to get them to get a good score.
+*/
 typedef struct{
     SDL_Surface* cimg[6];
     int value,ac,r;
     SDL_Rect pos;
 }coin;
 
+/*
+* @struct Menu
+* @brief Includes all the different resources used in the menu.
+*/
 typedef struct{
     SDL_Surface* MBG; //menu background
     SDL_Surface* B1; //button 1

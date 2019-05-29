@@ -1,3 +1,8 @@
+/**
+*  @file fn.c
+*  @brief This file has the majority of the different functions used in ToS.
+*/
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <SDL/SDL.h>
@@ -7,6 +12,14 @@
 #include "fn.h"
 #include <math.h>
 
+
+/**
+* @brief Sets up menu resources, music and character creation assets.
+* @param M Menu Structure
+* @param m Music structure
+* @param x Character creation structure
+* @return Nothing
+*/
 void init_res(Menu* M,Music* m,CC* x){
     //main menu resources
     m->sfx = Mix_LoadMUS("menu_res/CSFX.mp3"); m->mm = Mix_LoadMUS("menu_res/music.mp3");
@@ -26,6 +39,12 @@ void init_res(Menu* M,Music* m,CC* x){
     x->buffer = IMG_Load("menu_res/cc/buffer.png");
 }
 
+/**
+* @brief Frees the menu and music assets.
+* @param M Menu Structure
+* @param m Music structure
+* @return Nothing
+*/
 void free_res(Menu M,Music m){
     Mix_FreeMusic(m.sfx);   SDL_FreeSurface(M.SBG);     
     Mix_FreeMusic(m.mm);    SDL_FreeSurface(M.S4); 
@@ -41,6 +60,11 @@ void free_res(Menu M,Music m){
     SDL_FreeSurface(M.S3); 
 }
 
+/**
+* @brief Frees the character creation assets.
+* @param x Character creation structure
+* @return Nothing
+*/
 void free_res_cc(CC x){
     SDL_FreeSurface(x.body.b1);
     SDL_FreeSurface(x.body.b2);
@@ -55,6 +79,13 @@ void free_res_cc(CC x){
     SDL_FreeSurface(x.hl);
 }
 
+/**
+* @brief Used to display the volume level in the settings menu.
+* @param M Menu Structure
+* @param scr The screen
+* @param x An integer represeting the volume level.
+* @return Nothing
+*/
 void vl_blit(Menu M,SDL_Surface** scr,int x){
     SDL_Rect pos; pos.x = 153; pos.y = 151; pos.w = M.S1H->w; pos.h = M.S1H->h;
     for(int i=0;i<x;i++){
@@ -63,6 +94,11 @@ void vl_blit(Menu M,SDL_Surface** scr,int x){
     }
 }
 
+/**
+* @brief Moves the saved data into an array.
+* @param T An array.
+* @return Nothing
+*/
 void savefile_to_array(int T[]){
     FILE* f = NULL;
     f = fopen("save.txt","r");
@@ -70,6 +106,11 @@ void savefile_to_array(int T[]){
     fclose(f);
 }
 
+/**
+* @brief Saves the array in a file.
+* @param T An array.
+* @return Nothing
+*/
 void array_to_savefile(int T[]){
     FILE* f = NULL;
     f = fopen("save.txt","w");
@@ -77,6 +118,14 @@ void array_to_savefile(int T[]){
     fclose(f);
 }
 
+/**
+* @brief Settings menu.
+* @param M Menu structure.
+* @param m Music structure.
+* @param scr The screen.
+* @param T An array.
+* @return Nothing
+*/
 int settings(Menu M,Music m,SDL_Surface** scr,int T[]){
     SDL_Rect pos; pos.x = 0; pos.y = 0; SDL_Event event; int x,y,i=0,test=0,ftest=0,test2=0; FILE* f = NULL;
     SDL_Rect pos1; pos1.x = 120; pos1.y = 282;
@@ -239,6 +288,13 @@ int settings(Menu M,Music m,SDL_Surface** scr,int T[]){
     }
 }
 
+/**
+* @brief Saves a custom character in a text file.
+* @param x The head shape.
+* @param y The body shape.
+* @param z The lower body shape.
+* @return Nothing
+*/
 void savecc(int x,int y,int z){
     FILE* f = NULL;
     f = fopen("savecc.txt","w");
@@ -246,6 +302,14 @@ void savecc(int x,int y,int z){
     fclose(f);
 }
 
+/**
+* @brief The menu in which a player can make a custom character.
+* @param cc The custom character structure.
+* @param m Music structure.
+* @param scr The screen.
+* @param T An array containing saved data.
+* @return 1 if the operation is successful otherwise returns 0.
+*/
 int cc_menu(CC cc,Music m,SDL_Surface** scr,int T[]){
     SDL_Rect pos; pos.x = 0; pos.y = 0; SDL_Event event; int i=0,x,y,test,testh=0,testb=0,testf=0;
     SDL_Rect pos2; 
@@ -395,6 +459,13 @@ int cc_menu(CC cc,Music m,SDL_Surface** scr,int T[]){
 
 void game(SDL_Surface** scr);
 
+/**
+* @brief Used to pick a character.
+* @param m Music structure.
+* @param scr The screen.
+* @param T An array containing saved data.
+* @return Nothing.
+*/
 void characterpicker(SDL_Surface** scr,int T[],Music m){
     SDL_Surface* img = IMG_Load("media/screens/cs.png"); SDL_Event event;
     SDL_Surface* img2 = IMG_Load("media/player/p2/p2.png"); SDL_Rect pos;  pos.x = 230;   pos.y = 200;
@@ -435,6 +506,13 @@ void characterpicker(SDL_Surface** scr,int T[],Music m){
     }
 }
 
+/**
+* @brief Used to pick the game mode.
+* @param m Music structure.
+* @param scr The screen.
+* @param T An array containing saved data.
+* @return Nothing.
+*/
 void gamemenu(SDL_Surface** scr,int T[],Music m){
     SDL_Surface* img = IMG_Load("media/screens/mselect.png"); SDL_Event event;
     Mix_PlayMusic(m.mm,-1);
@@ -469,6 +547,15 @@ void gamemenu(SDL_Surface** scr,int T[],Music m){
     }
 }
 
+/**
+* @brief The games main menu.
+* @param M Menu structure.
+* @param m Music structure.
+* @param scr The screen.
+* @param T An array containing saved data.
+* @param cc CC structure.
+* @return Nothing.
+*/
 void menu(Menu M,Music m,SDL_Surface** scr,int T[],CC cc){
     int x = 0,y = 0; SDL_Event event; int test,test2=0; SDL_Rect pos,posb,posb2,posb3,posb4; int i = 0;
     pos.x = 0; pos.y = 0; pos.w = M.MBG->w; pos.h = M.MBG->h;
@@ -620,7 +707,11 @@ void menu(Menu M,Music m,SDL_Surface** scr,int T[],CC cc){
     }
 }
 
-
+/**
+* @brief Used to initialize player 1 sprites.
+* @param p Player structure.
+* @return Nothing.
+*/
 void init_anim_p1(Player* p){
     p->anim.imgI[0] = IMG_Load("media/player/p2/p1.png");
     p->anim.imgI[1] = IMG_Load("media/player/p2/p2.png");
@@ -636,6 +727,11 @@ void init_anim_p1(Player* p){
     p->anim.imgSG[2] = IMG_Load("media/player/p2/p7_G.png");
 }
 
+/**
+* @brief Used to initialize player 2 sprites.
+* @param p Player structure.
+* @return Nothing.
+*/
 void init_anim_p2(Player* p){
     p->anim.imgI[0] = IMG_Load("media/player/p3/p1.png");
     p->anim.imgI[1] = IMG_Load("media/player/p3/p2.png");
@@ -651,6 +747,11 @@ void init_anim_p2(Player* p){
     p->anim.imgSG[2] = IMG_Load("media/player/p3/p7_G.png");
 }
 
+/**
+* @brief Intro animation function.
+* @param scr The screen.
+* @return Nothing.
+*/
 void intro(SDL_Surface** scr){
     (*scr) = SDL_SetVideoMode(1280,720,32,SDL_HWSURFACE|SDL_DOUBLEBUF);
     SDL_Surface *f1,*f2,*f3,*f4;
@@ -674,6 +775,11 @@ void intro(SDL_Surface** scr){
     SDL_Delay(500);
 }
 
+/**
+* @brief Displays the credits.
+* @param scr The screen.
+* @return Nothing.
+*/
 void credits(SDL_Surface** scr){
     (*scr) = SDL_SetVideoMode(1280,720,32,SDL_HWSURFACE|SDL_DOUBLEBUF);
     SDL_Surface* crd = IMG_Load("menu_res/menu/credits.png"); SDL_Event event; //SDL_Rect pos; pos.y = 100; pos.x = 0;
@@ -691,6 +797,12 @@ void credits(SDL_Surface** scr){
     }
 }
 
+/**
+* @brief Grabs the color of a chosen pixel.
+* @param pSurface The image from which the function determines colors.
+* @param x,y coords.
+* @return RGB Color codes.
+*/
 SDL_Color GetPixel(SDL_Surface* pSurface,int x,int y){
   SDL_Color color;
   Uint32 col = 0 ;
@@ -712,6 +824,14 @@ SDL_Color GetPixel(SDL_Surface* pSurface,int x,int y){
   return ( color ) ;
 }
 
+/**
+* @brief Checks for collision with designated colors on the map.
+* @param img The image from which the function determines colors and checks for collision.
+* @param pos coords.
+* @param z An integer used to determine whether the function is going to check for collision on a vertical or horizontal axis.
+* @param type An integer used to determine whether the function is going to check for collision beneath or above the player.
+* @return true or false as an int.
+*/
 int collisioncheck(SDL_Surface* img,SDL_Rect pos,int z,int type){
     SDL_Color C;
     if(type)
@@ -735,6 +855,13 @@ int collisioncheck(SDL_Surface* img,SDL_Rect pos,int z,int type){
     }
 }*/
 
+/**
+* @brief A function that blits how much time is left until the game is over.
+* @param scr The screen.
+* @param T An array that contains digits ranging from 0-9.
+* @param x The integer to be blitted.
+* @return Nothing.
+*/
 void BlitTime(int x,SDL_Surface* T[],SDL_Surface** scr){
     int t[3];
     
@@ -747,6 +874,13 @@ void BlitTime(int x,SDL_Surface* T[],SDL_Surface** scr){
        
 }
 
+/**
+* @brief A function that blits the player's score.
+* @param scr The screen.
+* @param T An array that contains digits ranging from 0-9.
+* @param x The integer to be blitted.
+* @return Nothing.
+*/
 void BlitScore(int x,SDL_Surface* T[],SDL_Surface** scr){
     int t[3];
     
@@ -759,6 +893,11 @@ void BlitScore(int x,SDL_Surface* T[],SDL_Surface** scr){
        
 }
 
+/**
+* @brief This function loads all the puzzles.
+* @param p An array of puzzles.
+* @return Nothing.
+*/
 void init_puzzle(puzzle p[]){
     p[0].img = IMG_Load("media/puzzles/P1.png"); p[0].rep = SDLK_LEFT;
     p[1].img = IMG_Load("media/puzzles/P2.png"); p[1].rep = SDLK_RIGHT;
@@ -767,6 +906,12 @@ void init_puzzle(puzzle p[]){
     p[4].img = IMG_Load("media/puzzles/P5.png"); p[4].rep = SDLK_UP;
 }
 
+/**
+* @brief This function executes a puzzle minigame.
+* @param p An array of puzzles.
+* @param scr The screen.
+* @return An integer representing whether the player guessed the puzzle right.
+*/
 int enigme(SDL_Surface** scr,puzzle p){
     SDL_Event event;
     (*scr) = SDL_SetVideoMode(1280,720,32,SDL_HWSURFACE|SDL_DOUBLEBUF);
@@ -793,6 +938,11 @@ int enigme(SDL_Surface** scr,puzzle p){
     }
 }
 
+/**
+* @brief This function loads the bat ennemy.
+* @param B The bat structure.
+* @return Nothing.
+*/
 void initialiser_bat(bat* B)
 {
     B->position_bat.x = 640;
@@ -804,6 +954,10 @@ void initialiser_bat(bat* B)
     B->image_bat[1] = IMG_Load("media/objects/bat2.png");    
 }
 
+/**
+* @brief Returns an integer between 0 and 100.
+* @return The integer.
+*/
 int SOSO(){ // 50/50
 int t ;
 srand(time(NULL));
@@ -813,6 +967,13 @@ if (t < 50)
   else return 0;
 }
 
+/**
+* @brief This function randomly moves a 2nd entity (in this case the bat).
+* @param B The bat structure.
+* @param scr The screen.
+* @param y Used to animate the bat.
+* @return Nothing.
+*/
 void deplacement_aleatoire(bat* B,SDL_Surface** scr,int y)
 {
     int x=100;
@@ -843,12 +1004,24 @@ SDL_BlitSurface(B->image_bat[y%2],NULL,(*scr),&B->position_bat);
 }
 }
 
+/**
+* @brief This function determines whether a collision between the player and the ennemy has occured.
+* @param pp Player position.
+* @param ep Ennemy position.
+* @return True or false as an integer.
+*/
 int PEcollision(SDL_Rect pp,SDL_Rect ep){
     if((pp.x+pp.w) >= ep.x && pp.x <= (ep.x+ep.w) && (pp.y+pp.h) >= ep.y && pp.y <= (ep.y+ep.h))
         return 1;
     return 0; 
 }
 
+/**
+* @brief This function sets up the player structure.
+* @param p Player structure.
+* @param n Used to choose which character to load.
+* @return Nothing.
+*/
 void player_setup(Player* p,int n){
     
     if(n == 1)
@@ -870,6 +1043,12 @@ void player_setup(Player* p,int n){
     p->posJ.w = 139;
 
 }
+
+/**
+* @brief This function sets up the array containing pictures of digits.
+* @param T Said array.
+* @return Nothing.
+*/
 void init_numbers(SDL_Surface* T[]){
     T[0] = IMG_Load("media/temps/0.png");
     T[1] = IMG_Load("media/temps/1.png");
@@ -883,6 +1062,11 @@ void init_numbers(SDL_Surface* T[]){
     T[9] = IMG_Load("media/temps/9.png");
 }
 
+/**
+* @brief This function sets up the coins in the game.
+* @param C Said coins.
+* @return Nothing.
+*/
 void init_coins(coin* C){
     C->value = 50; C->ac = 0; C->r = 40;
     C->cimg[0] = IMG_Load("media/objects/coin1.png");
@@ -893,10 +1077,20 @@ void init_coins(coin* C){
     C->cimg[5] = IMG_Load("media/objects/coin6.png");
 }
 
+/**
+* @brief This function displays the coins in the game.
+* @param C Said coins.
+* @return Nothing.
+*/
 void displaycoins(coin C,SDL_Surface** scr){
     SDL_BlitSurface(C.cimg[C.ac%6],NULL,(*scr),&C.pos);
 }
 
+/**
+* @brief This function is literally useless.
+* @param C USELESS.
+* @return Nothing.
+*/
 int collisiontrigo(coin P1,coin P2){
 	SDL_Rect centreA, centreB;
 	centreA.x=P1.pos.x+P1.r;
@@ -918,6 +1112,11 @@ int collisiontrigo(coin P1,coin P2){
 	}
 }
 
+/**
+* @brief Displays the gameover screen.
+* @param scr The screen.
+* @return Nothing.
+*/
 void deathscreen(SDL_Surface** scr){
     SDL_Surface* img = IMG_Load("media/screens/gameover.png"); SDL_Event event;
     SDL_BlitSurface(img,NULL,(*scr),NULL);
@@ -937,6 +1136,11 @@ void deathscreen(SDL_Surface** scr){
     }
 }
 
+/**
+* @brief This function displays the victory screen.
+* @param scr screen.
+* @return Nothing.
+*/
 void victory(SDL_Surface** scr){
     SDL_Surface* img = IMG_Load("media/screens/gj.png"); SDL_Event event;
     SDL_BlitSurface(img,NULL,(*scr),NULL);
@@ -956,6 +1160,13 @@ void victory(SDL_Surface** scr){
     }
 }
 
+/**
+* @brief Our games 1st level.
+* @param scr The screen.
+* @param n The number of players.
+* @param s Determines which character to load if the player chose to play by himself.
+* @return Nothing.
+*/
 void gamelvl1(SDL_Surface** scr,int n,int s){
     //Set up
     SDL_Rect pos; int i=0;
@@ -1375,6 +1586,14 @@ void gamelvl1(SDL_Surface** scr,int n,int s){
     }
 }
 
+/**
+* @brief Enables parallax scrolling in the game.
+* @param scr The screen.
+* @param x The scrolling factor.
+* @param b1-3 The different backgrounds.
+* @param p1-3 The different positions.
+* @return Nothing.
+*/
 void parallax_scrolling(SDL_Surface** scr,int x,SDL_Surface* b1,SDL_Surface* b2,SDL_Surface* b3,SDL_Rect* p1,SDL_Rect* p2,SDL_Rect* p3){
     
     //printf("%d \n",x);
@@ -1385,6 +1604,13 @@ void parallax_scrolling(SDL_Surface** scr,int x,SDL_Surface* b1,SDL_Surface* b2,
     SDL_Flip((*scr));
 }
 
+/**
+* @brief Our games 2st level.
+* @param scr The screen.
+* @param n The number of players.
+* @param s Determines which character to load if the player chose to play by himself.
+* @return Nothing.
+*/
 void gamelvl2(SDL_Surface** scr,int n,int s){
     //Set up
     SDL_Rect pos1,pos2,pos3; int i=0;
@@ -1769,6 +1995,13 @@ void gamelvl2(SDL_Surface** scr,int n,int s){
     }
 }
 
+/**
+* @brief Our games final level.
+* @param scr The screen.
+* @param n The number of players.
+* @param s Determines which character to load if the player chose to play by himself.
+* @return Nothing.
+*/
 void gamelvl3(SDL_Surface** scr,int n,int s){
     //Set up
     SDL_Rect pos1,pos2,pos3; int i=0;
@@ -2152,3 +2385,4 @@ void gamelvl3(SDL_Surface** scr,int n,int s){
         SDL_Flip((*scr));
     }
 }
+
