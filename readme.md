@@ -3,7 +3,6 @@ Tower of Mystery is an open-source game made from scratch using C and SDL librar
 
 ## System requirements
 * SDL libraries.
-* A screen resolution of 1280*720 or higher.
 * A Linux based system.
 
 ## Building from source
